@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=mediapi
+Description=mediapi plugin.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/mediapi
+ScriptFile=/usr/share/plymouth/themes/mediapi/mediapi.script

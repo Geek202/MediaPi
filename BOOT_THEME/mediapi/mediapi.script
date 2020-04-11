@@ -1,0 +1,104 @@
+for (i=0; i<10; i++){
+  spec[i].image = Image("spec" + (i % 3) + ".png");
+  spec[i].sprite = Sprite(spec[i].image);
+  spec[i].sprite.SetOpacity (0.0);
+  }
+
+logo.image = Image("logo.png");
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetX (Window.GetWidth()  / 2 - logo.image.GetWidth()  / 2);
+logo.sprite.SetY (Window.GetHeight() / 2 - logo.image.GetHeight() / 2);
+logo.sprite.SetOpacity (0.0);
+logo.sprite.SetZ (10000);
+progress = 0.0;
+
+fun refresh (){
+  inc = progress;
+  
+  logo.sprite.SetOpacity (MathClamp((inc-0.7)/0.2, 0, 1));
+  
+  if (inc<0.8){
+    for (i=0; i<10; i++){
+      spec[i].sprite.SetX (Window.GetWidth()  / 2 - spec[i].image.GetWidth()  / 2 + Math.Sin(i*i+(inc*100+i*17)/10) * (0.8-inc)*Window.GetWidth()*0.3);
+      spec[i].sprite.SetY (Window.GetHeight() / 2 - spec[i].image.GetHeight() / 2 + Math.Cos(i*i+(inc*100+i*5)/7) * (0.8-inc)*Window.GetHeight()*0.3);
+      spec[i].sprite.SetZ (0);
+      spec[i].sprite.SetOpacity (inc/0.8);
+      }
+    }
+  else {
+    for (i=0; i<10; i++)
+      spec[i].sprite.SetOpacity (Math.Clamp((0.9-inc)/0.1, 0, 1));
+    }
+  
+  }
+
+Plymouth.SetRefreshFunction (refresh);
+
+#----------------------------------------- Progress Bar --------------------------------
+
+box_ofset = 75;
+
+progress_box.image = Image("progress_box.png");
+progress_box.sprite = Sprite(progress_box.image);
+
+progress_box.x = Window.GetWidth()  / 2 -    progress_box.image.GetWidth()  / 2;
+progress_box.y = Window.GetHeight() * 0.75 - progress_box.image.GetHeight() / 2;
+progress_box.y = progress_box.y + box_ofset;
+progress_box.sprite.SetPosition(progress_box.x, progress_box.y, 0);
+
+progress_bar.original_image = Image("progress_bar.png");
+progress_bar.sprite = Sprite();
+
+progress_bar.x = Window.GetWidth()  / 2 -        progress_bar.original_image.GetWidth() / 2;
+progress_bar.y = Window.GetHeight() / 2 * 1.5  - progress_box.image.GetHeight() / 2 + (progress_box.image.GetHeight() - progress_bar.original_image.GetHeight()) / 2;
+progress_bar.y = progress_bar.y + box_ofset;
+
+progress_bar.sprite.SetPosition(progress_bar.x, progress_bar.y, 1);
+
+fun progress_callback (duration, progress)
+  {
+    global.progress = progress;
+    if (progress_bar.image.GetWidth () != Math.Int (progress_bar.original_image.GetWidth () * progress))
+      {
+        progress_bar.image = progress_bar.original_image.Scale(progress_bar.original_image.GetWidth(progress_bar.original_image) * progress, progress_bar.original_image.GetHeight());
+        progress_bar.sprite.SetImage (progress_bar.image);
+      }
+  }
+
+Plymouth.SetBootProgressFunction(progress_callback);
+
+#----------------------------------------- Quit --------------------------------
+
+fun quit_callback ()
+{
+  logo.sprite.SetOpacity (1);
+}
+
+Plymouth.SetQuitFunction(quit_callback);
+
+#----------------------------------------- Message --------------------------------
+
+message_sprite = Sprite();
+message_sprite.SetPosition(10, 10, 10000);
+
+fun message_callback (text)
+{
+  my_image = Image.Text(text, 1, 1, 1);
+  message_sprite.SetImage(my_image);
+}
+
+Plymouth.SetMessageFunction(message_callback);
+
+
+#---------------------------------------- BOOT MESSAGES ---------------------------
+#This code is from the pix theme
+message_sprite = Sprite();
+message_sprite.SetPosition(screen_width * 0.1, screen_height * 0.9, 10000);
+
+fun message_callback (text) {
+	my_image = Image.Text(text, 1, 1, 1);
+	message_sprite.SetImage(my_image);
+	sprite.SetImage (resized_image);
+}
+
+Plymouth.SetUpdateStatusFunction(message_callback);
